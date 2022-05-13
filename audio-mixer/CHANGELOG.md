@@ -1,3 +1,12 @@
+## [2.2.8](https://github.com/rjunsk/me-playground/compare/v2.2.7...v2.2.8) (2022-05-13)
+
+
+### Bug Fixes
+
+* **video-composer:** video test release 7 ([#9](https://github.com/rjunsk/me-playground/issues/9)) ([23e7c61](https://github.com/rjunsk/me-playground/commit/23e7c6195dc1d465b4501aa36dee4250c4a8274a))
+
+
+
 ## [2.2.7](https://github.com/rjunsk/me-playground/compare/v2.2.6...v2.2.7) (2022-05-13)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **audio-mixer:** test release 3 ([#5](https://github.com/rjunsk/me-playground/issues/5)) ([d885ba2](https://github.com/rjunsk/me-playground/commit/d885ba2b9a7dc39a0911106da959dc3647ead0d1))
-
-
-
-## [2.2.3](https://github.com/rjunsk/me-playground/compare/6a893204951e7018666f392749abd548f4a1f672...v2.2.3) (2022-05-13)
-
-
-### Bug Fixes
-
-* **audio-mixer:** test release 2 ([#4](https://github.com/rjunsk/me-playground/issues/4)) ([6a89320](https://github.com/rjunsk/me-playground/commit/6a893204951e7018666f392749abd548f4a1f672))
 
 
 
