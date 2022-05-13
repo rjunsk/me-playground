@@ -24,23 +24,6 @@ jobs:
         id: generate
         with:
           GITHUB_AUTH: "${{ secrets.GITHUB_TOKEN }}"
-          template: |
-            {{#each .}}
-            ## {{releaseTitle}} (__{{releaseDate}}__)
-
-            {{#each labels}}
-            ###  {{ name }}
-            {{#each scopes }}
-            #### \`{{name}}\`
-            {{#each changes}}
-            - [#{{id}}]({{html_url}}) {{title}} by @{{author}}
-            {{/each}}
-            {{/each}}
-            ---
-            {{/each}}
-
-            Thanks to {{contributorCount}} contributors namely {{#each contributors}}[@{{login}}]({{url}}){{#unless @last}},{{/unless}} {{/each}}
-            {{/each }}
       - run: echo "${{steps.generate.outputs.changelog}}"
 
       - name: create release audio-mixer
