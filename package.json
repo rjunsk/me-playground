@@ -33,15 +33,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ricardotwilio/media-extensions-ci-playground.git"
+    "url": "git+https://github.com/rjunsk/me-playground.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ricardotwilio/media-extensions-ci-playground/issues"
+    "url": "https://github.com/rjunsk/me-playground/issues"
   },
-  "homepage": "https://github.com/ricardotwilio/media-extensions-ci-playground#readme",
+  "homepage": "https://github.com/rjunsk/me-playground#readme",
   "private": true,
   "workspaces": [
     "audio-mixer",
