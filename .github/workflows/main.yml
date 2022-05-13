@@ -18,6 +18,31 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './audio-mixer/package.json'
           output-file: './audio-mixer/CHANGELOG.md'
+          
+      - name: generate changelog
+        uses: arpitBhalla/monorepo-changelog@master
+        id: generate
+        with:
+          GITHUB_AUTH: "${{ secrets.GITHUB_TOKEN }}"
+          from: "1.2.0"
+          to: "origin/main"
+          template: |
+            {{#each .}}
+            ## {{releaseTitle}} (__{{releaseDate}}__)
+
+            {{#each labels}}
+            ###  {{ name }}
+            {{#each scopes }}
+            #### \`{{name}}\`
+            {{#each changes}}
+            - [#{{id}}]({{html_url}}) {{title}} by @{{author}}
+            {{/each}}
+            {{/each}}
+            ---
+            {{/each}}
+
+            Thanks to {{contributorCount}} contributors namely {{#each contributors}}[@{{login}}]({{url}}){{#unless @last}},{{/unless}} {{/each}}
+            {{/each }}
 
       - name: create release audio-mixer
         uses: actions/create-release@v1
@@ -27,4 +52,4 @@ jobs:
         with:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
+          body: ${{ steps.generate.outputs.changelog }}
