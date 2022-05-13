@@ -34,7 +34,6 @@ aliases:
     tags:
       only:
         - /^audio-mixer-\d+\.\d+\.\d+-rc.\d+$/
-        - /^audio-mixer-\d+\.\d+\.\d+-test\.\d+-rc.\d+$/
         - /^audio-mixer-\d+\.\d+\.\d+-beta\.\d+-rc.\d+$/
     branches:
       ignore: /.*/
@@ -43,25 +42,11 @@ aliases:
     tags:
       only:
         - /^video-composer-\d+\.\d+\.\d+-rc.\d+$/
-        - /^video-composer-\d+\.\d+\.\d+-test\.\d+-rc.\d+$/
         - /^video-composer-\d+\.\d+\.\d+-beta\.\d+-rc.\d+$/
     branches:
       ignore: /.*/
 
 commands:
-  shared-e2e-video-composer-setup:
-    steps:
-      - shared-setup
-      - run:
-          name: Run Tests
-          command: yarn test:video
-      - run:
-          name: Run Eslint
-          command: yarn lint:video
-      - run:
-          name: Build app and check types
-          command: yarn build:video
-
   shared-setup:
     steps:
       - add_ssh_keys:
@@ -74,12 +59,12 @@ commands:
             echo "Setting environment variables"
             echo ACCOUNT_SID=$TWILIO_ACCOUNT_SID >> .env
             echo AUTH_TOKEN=$TWILIO_AUTH_TOKEN >> .env
-            echo TEST_ACCOUNT_SID=$TEST_ACCOUNT_SID >> .env
-            echo TEST_API_KEY_SID=$TEST_API_KEY_SID >> .env
-            echo TEST_API_KEY_SECRET=$TEST_API_KEY_SECRET >> .env
-            echo TEST_ACCOUNT_SID_STAGE=$TEST_ACCOUNT_SID_STAGE >> .env
-            echo TEST_API_KEY_SID_STAGE=$TEST_API_KEY_SID_STAGE >> .env
-            echo TEST_API_KEY_SECRET_STAGE=$TEST_API_KEY_SECRET_STAGE >> .env
+            echo TEST_ACCOUNT_SID_V2=$TEST_ACCOUNT_SID_V2 >> .env
+            echo TEST_API_KEY_SID_V2=$TEST_API_KEY_SID_V2 >> .env
+            echo TEST_API_KEY_SECRET_V2=$TEST_API_KEY_SECRET_V2 >> .env
+            echo TEST_ACCOUNT_SID_STAGE_V2=$TEST_ACCOUNT_SID_STAGE_V2 >> .env
+            echo TEST_API_KEY_SID_STAGE_V2=$TEST_API_KEY_SID_STAGE_V2 >> .env
+            echo TEST_API_KEY_SECRET_STAGE_V2=$TEST_API_KEY_SECRET_STAGE_V2 >> .env
             echo TWILIO_ENVIRONMENT=<< pipeline.parameters.test-environment >> >> .env
       - run:
           name: Set git publisher
@@ -99,7 +84,7 @@ jobs:
           name: Run Tests
           command: yarn test:video
       - store_artifacts:
-          path: video-composer/coverage
+          path: packages/video-composer/coverage
       - run:
           name: Run Eslint
           command: yarn lint:video
@@ -113,14 +98,14 @@ jobs:
           name: Set Environment Variables for temporary deployment with test account
           command: |
             echo "Setting environment variables"
-            echo ACCOUNT_SID=$TEST_API_KEY_SID >> .env
-            echo AUTH_TOKEN=$TEST_API_KEY_SECRET >> .env
+            echo ACCOUNT_SID=$TEST_API_KEY_SID_V2 >> .env
+            echo AUTH_TOKEN=$TEST_API_KEY_SECRET_V2 >> .env
       - run:
-          name: Deploy video-composer to temporary url
+          name: Deploy video composer to temporary url
           command: yarn deploy:video:temp
       - run:
           name: Run e2e tests
-          command: yarn run cypress:e2e:video
+          command: CYPRESS_MEDIA_EXTENSION=https://video-composer-v2-5485-temp.twil.io yarn run cypress:e2e:video
       - store_artifacts:
           path: cypress/screenshots
       - store_artifacts:
@@ -130,13 +115,27 @@ jobs:
     docker:
       - image: circleci/node:16-browsers
     steps:
-      - shared-setup
+      - checkout
+      - run:
+          name: Set Environment Variables
+          command: |
+            echo "Setting environment variables"
+            echo ACCOUNT_SID=$TEST_EXTENSION_DEPLOY_ACCOUNT_SID >> .env
+            echo AUTH_TOKEN=$TEST_EXTENSION_DEPLOY_AUTH_TOKEN	 >> .env
+            echo TWILIO_ENVIRONMENT=<< pipeline.parameters.test-environment >> >> .env
+      - run:
+          name: Set git publisher
+          command: |
+            git config --global user.email $CI_GIT_USER_EMAIL
+            git config --global user.name $CI_GIT_USER_NAME
+      - node/install-packages:
+          pkg-manager: yarn
       - run:
           name: Create version.txt
           command: |
             VERSION=$(node -pe "require('video-composer/package.json').version")
             COMMIT=$(echo $CIRCLE_SHA1 | cut -c -7)
-            echo $VERSION-$COMMIT > video-composer/public/version.txt
+            echo $VERSION-$COMMIT > packages/video-composer/public/version.txt
       - run:
           name: Build
           command: yarn build:video
@@ -153,7 +152,7 @@ jobs:
           name: Run Tests
           command: yarn test:audio
       - store_artifacts:
-          path: audio-mixer/coverage
+          path: packages/audio-mixer/coverage
       - run:
           name: Run Eslint
           command: yarn lint:audio
@@ -163,6 +162,18 @@ jobs:
       - run:
           name: Run integration tests
           command: yarn cypress:integration:audio
+      - run:
+          name: Set Environment Variables for temporary deployment with test account
+          command: |
+            echo "Setting environment variables"
+            echo ACCOUNT_SID=$TEST_API_KEY_SID_V2 >> .env
+            echo AUTH_TOKEN=$TEST_API_KEY_SECRET_V2 >> .env
+      - run:
+          name: Deploy audio-mixer to temporary url
+          command: yarn deploy:audio:temp
+      - run:
+          name: Run e2e tests
+          command: CYPRESS_MEDIA_EXTENSION=https://audio-mixer-v2-1855-temp.twil.io yarn run cypress:e2e:audio
 
   e2e-test-audio-mixer:
     docker:
@@ -180,13 +191,22 @@ jobs:
           command: yarn build:audio
       - run:
           name: Run e2e tests
-          command: yarn run cypress:e2e:audio
+          command: yarn run cypress:e2e:audio:stable
 
   e2e-test-video-composer:
     docker:
       - image: circleci/node:16-browsers
     steps:
-      - shared-e2e-video-composer-setup
+      - shared-setup
+      - run:
+          name: Run Tests
+          command: yarn test:video
+      - run:
+          name: Run Eslint
+          command: yarn lint:video
+      - run:
+          name: Build app and check types
+          command: yarn build:video
       - run:
           name: Run e2e tests
           command: yarn run cypress:e2e:video:stable
@@ -195,13 +215,27 @@ jobs:
     docker:
       - image: circleci/node:16-browsers
     steps:
-      - shared-setup
+      - checkout
+      - run:
+          name: Set Environment Variables
+          command: |
+            echo "Setting environment variables"
+            echo ACCOUNT_SID=$TEST_EXTENSION_DEPLOY_ACCOUNT_SID >> .env
+            echo AUTH_TOKEN=$TEST_EXTENSION_DEPLOY_AUTH_TOKEN >> .env
+            echo TWILIO_ENVIRONMENT=<< pipeline.parameters.test-environment >> >> .env
+      - run:
+          name: Set git publisher
+          command: |
+            git config --global user.email $CI_GIT_USER_EMAIL
+            git config --global user.name $CI_GIT_USER_NAME
+      - node/install-packages:
+          pkg-manager: yarn
       - run:
           name: Create version.txt
           command: |
             VERSION=$(node -pe "require('audio-mixer/package.json').version")
             COMMIT=$(echo $CIRCLE_SHA1 | cut -c -7)
-            echo $VERSION-$COMMIT > audio-mixer/public/version.txt
+            echo $VERSION-$COMMIT > packages/audio-mixer/public/version.txt
       - run:
           name: Build
           command: yarn build:audio
@@ -360,7 +394,6 @@ workflows:
             tags:
               only:
                 - /^audio-mixer-\d+\.\d+\.\d+$/
-                - /^audio-mixer-\d+\.\d+\.\d+-test\.\d+$/
                 - /^audio-mixer-\d+\.\d+\.\d+-beta\.\d+$/
             branches:
               ignore: /.*/
@@ -372,7 +405,6 @@ workflows:
             tags:
               only:
                 - /^video-composer-\d+\.\d+\.\d+$/
-                - /^video-composer-\d+\.\d+\.\d+-test\.\d+$/
                 - /^video-composer-\d+\.\d+\.\d+-beta\.\d+$/
             branches:
               ignore: /.*/
