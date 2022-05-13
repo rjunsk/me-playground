@@ -1,4 +1,13 @@
-## 2.2.9 (2022-05-13)
+## [2.2.11](https://github.com/rjunsk/me-playground/compare/audio-mixer-2.2.9...audio-mixer-2.2.11) (2022-05-13)
+
+
+### Bug Fixes
+
+* **video-composer:** video test release 10 ([#12](https://github.com/rjunsk/me-playground/issues/12)) ([b2b4d82](https://github.com/rjunsk/me-playground/commit/b2b4d8212ee7d3f6c11725ea6a8fc5bf380ca3ae))
+
+
+
+## [2.2.9](https://github.com/rjunsk/me-playground/compare/6a893204951e7018666f392749abd548f4a1f672...audio-mixer-2.2.9) (2022-05-13)
 
 
 ### Bug Fixes
