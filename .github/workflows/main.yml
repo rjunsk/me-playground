@@ -17,6 +17,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './audio-mixer/package.json'
+          output-file: './audio-mixer/CHANGELOG.md'
 
       - name: create release audio-mixer
         uses: actions/create-release@v1
