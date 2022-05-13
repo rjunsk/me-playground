@@ -10,6 +10,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: print pr
+      - run: echo "The title of PR is ${{ github.event.pull_request.title }}"
 
       - name: conventional Changelog Action audio-mixer
         id: changelog
