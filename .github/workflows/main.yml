@@ -7,6 +7,10 @@ on:
 jobs:
   audio-mixer-changelog:
     runs-on: ubuntu-latest
+    outputs:
+      audio-mixer-skipped: ${{ steps.changelog-audio-mixer.outputs.skipped }}
+      audio-mixer-tag: ${{ steps.changelog-audio-mixer.outputs.tag }}
+      audio-mixer-clean_changelog: ${{ steps.changelog-audio-mixer.outputs.clean_changelog }}
     steps:
       - uses: actions/checkout@v2
       - name: conventional Changelog Action audio-mixer
@@ -19,6 +23,10 @@ jobs:
 
   video-composer-changelog:  
     runs-on: ubuntu-latest
+    outputs:
+      video-composer-skipped: ${{ steps.changelog-video-composer.outputs.skipped }}
+      video-composer-tag: ${{ steps.changelog-video-composer.outputs.tag }}
+      video-composer-clean_changelog: ${{ steps.changelog-video-composer.outputs.clean_changelog }}
     steps:
       - uses: actions/checkout@v2
       - name: conventional Changelog Action video-composer
@@ -35,13 +43,14 @@ jobs:
     steps:
       - name: create audio-mixer release
         uses: actions/create-release@v1
-        if: ${{ needs.audio-mixer-changelog.outputs.skipped == 'false' }}
+        if: ${{ needs.audio-mixer-changelog.outputs.audio-mixer-skipped == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.audio-mixer-changelog.outputs.tag }}
-          release_name: ${{ needs.audio-mixer-changelog.outputs.tag }}
-          body: ${{ needs.audio-mixer-changelog.outputs.clean_changelog }}
+          tag-prefix: audio-mixer-
+          tag_name: ${{ needs.audio-mixer-changelog.outputs.audio-mixer-tag }}
+          release_name: ${{ needs.audio-mixer-changelog.outputs.audio-mixer-tag }}
+          body: ${{ needs.audio-mixer-changelog.outputs.audio-mixer-clean_changelog }}
 
   release-video-composer:
     runs-on: ubuntu-latest
@@ -49,10 +58,11 @@ jobs:
     steps:
       - name: create video-composer release
         uses: actions/create-release@v1
-        if: ${{ needs.video-composer-changelog.outputs.skipped == 'false' }}
+        if: ${{ needs.video-composer-changelog.outputs.video-composer-skipped == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.video-composer-changelog.outputs.tag }}
-          release_name: ${{ needs.video-composer-changelog.outputs.tag }}
-          body: ${{ needs.video-composer-changelog.outputs.clean_changelog }}
+          tag-prefix: video-composer-
+          tag_name: ${{ needs.video-composer-changelog.outputs.video-composer-tag }}
+          release_name: ${{ needs.video-composer-changelog.outputs.video-composer-tag }}
+          body: ${{ needs.video-composer-changelog.outputs.video-composer-clean_changelog }}
