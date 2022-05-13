@@ -5,12 +5,10 @@ on:
       - main
 
 jobs:
-  changelog:
+  audio-mixer-changelog:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
       - name: conventional Changelog Action audio-mixer
         id: changelog-audio-mixer
         uses: TriPSs/conventional-changelog-action@v3.7.1
@@ -18,7 +16,13 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './audio-mixer/package.json'
           output-file: './audio-mixer/CHANGELOG.md'
+    outputs:
+      changelog-audio-mixer-outputs: ${{ steps.changelog-audio-mixer.outputs }}
 
+  video-composer-changelog:  
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
       - name: conventional Changelog Action video-composer
         id: changelog-video-composer
         uses: TriPSs/conventional-changelog-action@v3.7.1
@@ -26,13 +30,33 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './video-composer/package.json'
           output-file: './video-composer/CHANGELOG.md'
+    outputs:
+      changelog-video-composer-outputs: ${{ steps.changelog-video-composer.outputs }}
 
-      - name: create release
+  release-audio-mixer:
+    runs-on: ubuntu-latest
+    needs: audio-mixer-changelog
+    steps:
+      - name: create audio-mixer release
         uses: actions/create-release@v1
-        if: ${{ steps.changelog-audio-mixer.outputs.skipped == 'false' || steps.changelog-video-composer.outputs.skipped == 'false' }}
+        if: ${{ needs.audio-mixer-changelog.outputs.changelog-audio-mixer-outputs.skipped == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          release_name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog-audio-mixer.outputs.clean_changelog }} \n\n ${{ steps.changelog-video-composer.outputs.clean_changelog }}
+          tag_name: ${{ needs.audio-mixer-changelog.outputs.changelog-audio-mixer-outputs.tag }}
+          release_name: ${{ needs.audio-mixer-changelog.outputs.changelog-audio-mixer-outputs.tag }}
+          body: ${{ needs.audio-mixer-changelog.outputs.changelog-audio-mixer-outputs.clean_changelog }}
+
+  release-video-composer:
+    runs-on: ubuntu-latest
+    needs: video-composer-changelog
+    steps:
+      - name: create video-composer release
+        uses: actions/create-release@v1
+        if: ${{ needs.video-composer-changelog.outputs.changelog-video-composer-outputs.skipped == 'false' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.video-composer-changelog.outputs.changelog-video-composer-outputs.tag }}
+          release_name: ${{ needs.video-composer-changelog.outputs.changelog-video-composer-outputs.tag }}
+          body: ${{ needs.video-composer-changelog.outputs.changelog-video-composer-outputs.clean_changelog }}
