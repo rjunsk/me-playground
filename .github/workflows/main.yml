@@ -12,19 +12,27 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: conventional Changelog Action audio-mixer
-        id: changelog
+        id: changelog-audio-mixer
         uses: TriPSs/conventional-changelog-action@v3.7.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './audio-mixer/package.json'
           output-file: './audio-mixer/CHANGELOG.md'
-          
+
+      - name: conventional Changelog Action video-composer
+        id: changelog-video-composer
+        uses: TriPSs/conventional-changelog-action@v3.7.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version-file: './video-composer/package.json'
+          output-file: './video-composer/CHANGELOG.md'
+
       - name: create release audio-mixer
         uses: actions/create-release@v1
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        if: ${{ steps.changelog-audio-mixer.outputs.skipped == 'false' || steps.changelog-video-composer.outputs.skipped == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
+          body: ${{ steps.changelog-audio-mixer.outputs.clean_changelog }} \n\n ${{ steps.changelog-video-composer.outputs.clean_changelog }}
