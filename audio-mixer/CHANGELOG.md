@@ -1,3 +1,12 @@
+## [2.2.6](https://github.com/rjunsk/me-playground/compare/v2.2.5...v2.2.6) (2022-05-13)
+
+
+### Bug Fixes
+
+* **audio-mixer:** test release 5 ([#7](https://github.com/rjunsk/me-playground/issues/7)) ([b5e4746](https://github.com/rjunsk/me-playground/commit/b5e47460757de6021326582e821e8012f59fcc9c))
+
+
+
 ## [2.2.5](https://github.com/rjunsk/me-playground/compare/v2.2.4...v2.2.5) (2022-05-13)
 
 
