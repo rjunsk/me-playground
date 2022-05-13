@@ -41,6 +41,7 @@ jobs:
 
             Thanks to {{contributorCount}} contributors namely {{#each contributors}}[@{{login}}]({{url}}){{#unless @last}},{{/unless}} {{/each}}
             {{/each }}
+      - run: echo "${{steps.generate.outputs.changelog}}"
 
       - name: create release audio-mixer
         uses: actions/create-release@v1
