@@ -17,6 +17,7 @@ jobs:
         id: changelog-audio-mixer
         uses: TriPSs/conventional-changelog-action@v3.7.1
         with:
+          tag-prefix: audio-mixer-
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './audio-mixer/package.json'
           output-file: './audio-mixer/CHANGELOG.md'
@@ -33,6 +34,7 @@ jobs:
         id: changelog-video-composer
         uses: TriPSs/conventional-changelog-action@v3.7.1
         with:
+          tag-prefix: video-composer-
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './video-composer/package.json'
           output-file: './video-composer/CHANGELOG.md'
@@ -47,7 +49,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag-prefix: audio-mixer-
           tag_name: ${{ needs.audio-mixer-changelog.outputs.audio-mixer-tag }}
           release_name: ${{ needs.audio-mixer-changelog.outputs.audio-mixer-tag }}
           body: ${{ needs.audio-mixer-changelog.outputs.audio-mixer-clean_changelog }}
@@ -62,7 +63,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag-prefix: video-composer-
           tag_name: ${{ needs.video-composer-changelog.outputs.video-composer-tag }}
           release_name: ${{ needs.video-composer-changelog.outputs.video-composer-tag }}
           body: ${{ needs.video-composer-changelog.outputs.video-composer-clean_changelog }}
