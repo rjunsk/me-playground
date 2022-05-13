@@ -1,3 +1,12 @@
+## [2.0.9](https://github.com/rjunsk/me-playground/compare/video-composer-2.0.7...video-composer-2.0.9) (2022-05-13)
+
+
+### Bug Fixes
+
+* **video-composer:** video test release 11 ([#13](https://github.com/rjunsk/me-playground/issues/13)) ([469a387](https://github.com/rjunsk/me-playground/commit/469a3876335f009ac25bd188d517de5b7abe1bc1))
+
+
+
 ## [2.0.7](https://github.com/rjunsk/me-playground/compare/video-composer-2.0.5...video-composer-2.0.7) (2022-05-13)
 
 
