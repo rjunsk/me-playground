@@ -10,10 +10,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
 
       - name: conventional Changelog Action audio-mixer
         id: changelog
@@ -23,13 +19,6 @@ jobs:
           version-file: './audio-mixer/package.json'
           output-file: './audio-mixer/CHANGELOG.md'
           
-      - name: generate changelog
-        uses: arpitBhalla/monorepo-changelog@master
-        id: generate
-        with:
-          GITHUB_AUTH: "${{ secrets.GITHUB_TOKEN }}"
-      - run: echo "${{steps.generate.outputs.changelog}}"
-
       - name: create release audio-mixer
         uses: actions/create-release@v1
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
@@ -38,4 +27,4 @@ jobs:
         with:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.generate.outputs.changelog }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
