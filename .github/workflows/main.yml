@@ -27,7 +27,7 @@ jobs:
           version-file: './video-composer/package.json'
           output-file: './video-composer/CHANGELOG.md'
 
-      - name: create release audio-mixer
+      - name: create release
         uses: actions/create-release@v1
         if: ${{ steps.changelog-audio-mixer.outputs.skipped == 'false' || steps.changelog-video-composer.outputs.skipped == 'false' }}
         env:
