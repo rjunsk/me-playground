@@ -16,8 +16,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './audio-mixer/package.json'
           output-file: './audio-mixer/CHANGELOG.md'
-    outputs:
-      changelog-audio-mixer-outputs: ${{ steps.changelog-audio-mixer.outputs }}
 
   video-composer-changelog:  
     runs-on: ubuntu-latest
@@ -30,8 +28,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version-file: './video-composer/package.json'
           output-file: './video-composer/CHANGELOG.md'
-    outputs:
-      changelog-video-composer-outputs: ${{ steps.changelog-video-composer.outputs }}
 
   release-audio-mixer:
     runs-on: ubuntu-latest
@@ -39,13 +35,13 @@ jobs:
     steps:
       - name: create audio-mixer release
         uses: actions/create-release@v1
-        if: ${{ needs.audio-mixer-changelog.outputs.changelog-audio-mixer-outputs.skipped == 'false' }}
+        if: ${{ needs.audio-mixer-changelog.outputs.skipped == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.audio-mixer-changelog.outputs.changelog-audio-mixer-outputs.tag }}
-          release_name: ${{ needs.audio-mixer-changelog.outputs.changelog-audio-mixer-outputs.tag }}
-          body: ${{ needs.audio-mixer-changelog.outputs.changelog-audio-mixer-outputs.clean_changelog }}
+          tag_name: ${{ needs.audio-mixer-changelog.outputs.tag }}
+          release_name: ${{ needs.audio-mixer-changelog.outputs.tag }}
+          body: ${{ needs.audio-mixer-changelog.outputs.clean_changelog }}
 
   release-video-composer:
     runs-on: ubuntu-latest
@@ -53,10 +49,10 @@ jobs:
     steps:
       - name: create video-composer release
         uses: actions/create-release@v1
-        if: ${{ needs.video-composer-changelog.outputs.changelog-video-composer-outputs.skipped == 'false' }}
+        if: ${{ needs.video-composer-changelog.outputs.skipped == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.video-composer-changelog.outputs.changelog-video-composer-outputs.tag }}
-          release_name: ${{ needs.video-composer-changelog.outputs.changelog-video-composer-outputs.tag }}
-          body: ${{ needs.video-composer-changelog.outputs.changelog-video-composer-outputs.clean_changelog }}
+          tag_name: ${{ needs.video-composer-changelog.outputs.tag }}
+          release_name: ${{ needs.video-composer-changelog.outputs.tag }}
+          body: ${{ needs.video-composer-changelog.outputs.clean_changelog }}
