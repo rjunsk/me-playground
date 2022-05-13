@@ -3,7 +3,7 @@ export default function App() {
     <>
       <h1>Video Composer</h1>
       <ul>
-        <li>conentional commit test 7</li>
+        <li>conentional commit test 8</li>
       </ul>
     </>
   );
