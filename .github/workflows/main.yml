@@ -24,8 +24,6 @@ jobs:
         id: generate
         with:
           GITHUB_AUTH: "${{ secrets.GITHUB_TOKEN }}"
-          from: "1.2.0"
-          to: "origin/main"
           template: |
             {{#each .}}
             ## {{releaseTitle}} (__{{releaseDate}}__)
