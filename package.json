@@ -56,5 +56,8 @@
   },
   "resolutions": {
     "babel-loader": "8.1.0"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.22.0"
   }
 }
