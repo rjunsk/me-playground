@@ -1,8 +1,8 @@
 name: Releases
 on:
   push:
-    branches:
-      - main
+#    branches:
+#      - main
 
 jobs:
   audio-mixer-changelog-release:
