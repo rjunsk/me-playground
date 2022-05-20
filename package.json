@@ -29,7 +29,8 @@
     "cypress:e2e:video": "cypress run --spec cypress/integration/video-composer.e2e.js",
     "cypress:e2e:video:stable": "cypress run --spec cypress/integration/stable/video-composer.e2e.js",
     "cypress:integration:audio": "cypress run --spec cypress/integration/audio-mixer.integration.js",
-    "cypress:integration:video": "cypress run --spec cypress/integration/video-composer.integration.js"
+    "cypress:integration:video": "cypress run --spec cypress/integration/video-composer.integration.js",
+    "release": "yarn changeset publish"
   },
   "repository": {
     "type": "git",
