@@ -30,3 +30,4 @@ jobs:
       - name: Output
         run:
           echo ${{ steps.changesets.outputs }}
+          echo ${{join(steps.changesets.outputs.*, '\n')}}
