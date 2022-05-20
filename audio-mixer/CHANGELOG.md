@@ -1,5 +1,11 @@
 # [2.3.0](https://github.com/rjunsk/me-playground/compare/audio-mixer-2.2.13...audio-mixer-2.3.0) (2022-05-16)
 
+## 2.3.3
+
+### Patch Changes
+
+- fe4a83c: test changeset 3
+
 ## 2.3.2
 
 ### Patch Changes
