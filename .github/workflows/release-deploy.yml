@@ -26,11 +26,15 @@ on:
         - Stable
 
 jobs:
-  greet:
+  release:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
+      id: extract_branch
+
     - name: Send greeting
       run: |
-        echo "${{ github.event.inputs.branch }} | ${{ github.event.inputs.extension-name }} | ${{ github.event.inputs.release-type }} | ${{ github.event.inputs.release-environment }}"
-        echo ${{join(github.event.inputs.*, '\n')}}
+        echo "${{ steps.extract_branch.outputs.branch }} | ${{ github.event.inputs.extension-name }} | ${{ github.event.inputs.release-type }} | ${{ github.event.inputs.release-environment }}"
