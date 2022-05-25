@@ -38,3 +38,16 @@ jobs:
     - name: Send greeting
       run: |
         echo "${{ steps.extract_branch.outputs.branch }} | ${{ github.event.inputs.extension-name }} | ${{ github.event.inputs.release-type }} | ${{ github.event.inputs.release-environment }}"
+        
+    - uses: actions/checkout@v1
+      
+    - name: get-npm-version
+      id: package-version
+      uses: martinbeentjes/npm-get-version-action@main
+      with:
+        path: "packages/${{ github.event.inputs.extension-name }}"
+    
+    - name: Show version number
+      run: echo "Version is ${{ steps.package-version.outputs.version }}"
+        
+        
