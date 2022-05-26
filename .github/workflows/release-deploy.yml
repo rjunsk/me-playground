@@ -1,4 +1,4 @@
-name: Release and Deploy Extension
+name: Release and Deploy Minor/Patch Version
 
 on:
   workflow_dispatch:
@@ -10,13 +10,6 @@ on:
         options: 
         - audio-mixer
         - video-composer
-      release-type:
-        type: choice
-        required: true
-        description: Release Version Type
-        options: 
-        - Major
-        - Minor/Patch
       release-environment:
         type: choice
         required: true
@@ -47,6 +40,23 @@ jobs:
       with: 
         path: '${{ github.event.inputs.extension-name }}/package.json'
         prop_path: 'version'
-    
-    - name: Show version number
-      run: echo "Version is ${{ steps.version.outputs.prop }}"
+              
+    - name: Beta Release Version Tag Name
+      if: ${{ github.event.inputs.release-environment == 'Preview' }}
+      run: echo "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta"
+        
+    - name: Perform beta release
+      id: beta-release
+      if: ${{ github.event.inputs.release-environment == 'Preview' }}
+      uses: actions/github-script@v6
+      with:
+        script: |
+          octokit.rest.repos.createRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag_name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta",
+            name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta",
+            prerelease: true,
+            generate_release_notes: true
+          });
+
