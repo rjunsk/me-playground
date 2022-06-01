@@ -84,7 +84,7 @@ jobs:
       id: set-result
       with:
         script: |
-          return github.event.inputs.release-environment == 'Preview' ? `${github.event.inputs.extension-name}-${steps.version.outputs.prop}-beta` : `${github.event.inputs.extension-name}-${steps.version.outputs.prop}-beta`;
+          return `${steps.version.outputs.prop}`;
         result-encoding: string
 
     - name: Get result
