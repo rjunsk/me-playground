@@ -45,39 +45,39 @@ jobs:
       if: ${{ github.event.inputs.release-environment == 'Preview' }}
       run: echo "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta"
         
-    - name: Perform beta release
-      id: beta-release
-      if: ${{ github.event.inputs.release-environment == 'Preview' }}
-      uses: actions/github-script@v6
-      with:
-        script: |
-          github.rest.repos.createRelease({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            tag_name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta",
-            name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta",
-            prerelease: true,
-            generate_release_notes: true
-          });
+#     - name: Perform beta release
+#       id: beta-release
+#       if: ${{ github.event.inputs.release-environment == 'Preview' }}
+#       uses: actions/github-script@v6
+#       with:
+#         script: |
+#           github.rest.repos.createRelease({
+#             owner: context.repo.owner,
+#             repo: context.repo.repo,
+#             tag_name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta",
+#             name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta",
+#             prerelease: true,
+#             generate_release_notes: true
+#           });
 
-    - name: Stable Release Version Tag Name
-      if: ${{ github.event.inputs.release-environment == 'Preview' }}
-      run: echo "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}"
+#     - name: Stable Release Version Tag Name
+#       if: ${{ github.event.inputs.release-environment == 'Preview' }}
+#       run: echo "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}"
         
-    - name: Perform Stable release
-      id: stable-release
-      if: ${{ github.event.inputs.release-environment == 'Stable' }}
-      uses: actions/github-script@v6
-      with:
-        script: |
-          github.rest.repos.createRelease({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            tag_name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}",
-            name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}",
-            prerelease: false,
-            generate_release_notes: true
-          });
+#     - name: Perform Stable release
+#       id: stable-release
+#       if: ${{ github.event.inputs.release-environment == 'Stable' }}
+#       uses: actions/github-script@v6
+#       with:
+#         script: |
+#           github.rest.repos.createRelease({
+#             owner: context.repo.owner,
+#             repo: context.repo.repo,
+#             tag_name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}",
+#             name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}",
+#             prerelease: false,
+#             generate_release_notes: true
+#           });
           
     - name: Execute JS code
       uses: actions/github-script@v6
