@@ -63,8 +63,7 @@ jobs:
           const { release_environment } = process.env;
           
           return release_environment == 'Preview';
-          result-encoding: boolean
-
+        result-encoding: boolean
 
     - name: Get result
       run: echo "${{steps.set-result.outputs.result}}"
