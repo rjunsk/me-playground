@@ -97,6 +97,11 @@ jobs:
       with:
         script: |
           const { extensionName, releaseType, releaseEnvironment, releaseVersion } = process.env;
+          console.log("extensionName", extensionName);
+          console.log("releaseType", releaseType);
+          console.log("releaseEnvironment", releaseEnvironment);
+          console.log("releaseVersion", releaseVersion);
+
           return releaseEnvironment == 'Preview' ? `${extensionName}-${releaseVersion}-beta` : `${extensionName}-${releaseVersion}`;
         result-encoding: string
 
