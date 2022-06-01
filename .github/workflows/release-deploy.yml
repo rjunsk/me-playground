@@ -78,4 +78,14 @@ jobs:
             prerelease: false,
             generate_release_notes: true
           });
+          
+    - name: Execute JS code
+      uses: actions/github-script@v6
+      id: set-result
+      with:
+        script: |
+          return github.event.inputs.release-environment == 'Preview' ? `${github.event.inputs.extension-name}-${steps.version.outputs.prop}-beta` : `${github.event.inputs.extension-name}-${steps.version.outputs.prop}-beta`;
+        result-encoding: string
 
+    - name: Get result
+      run: echo "${{steps.set-result.outputs.result}}"
