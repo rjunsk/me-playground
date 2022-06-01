@@ -26,9 +26,9 @@ jobs:
     - name: Set input as env variables
       run: echo "Setting workflow input as env variables"
       env:
-        extension-name: ${{ github.event.inputs.extension-name }}
-        release-type: ${{ github.event.inputs.release-type }}
-        release-environment: ${{ github.event.inputs.release-environment }}
+        extensionName: ${{ github.event.inputs.extension-name }}
+        releaseType: ${{ github.event.inputs.release-type }}
+        releaseEnvironment: ${{ github.event.inputs.release-environment }}
 
     - name: Extract branch name
       shell: bash
@@ -51,7 +51,7 @@ jobs:
     - name: Set version to env
       run: echo "Setting package version as env variables"
       env:
-        release-version: steps.version.outputs.prop
+        releaseVersion: steps.version.outputs.prop
               
     - name: Beta Release Version Tag Name
       if: ${{ github.event.inputs.release-environment == 'Preview' }}
@@ -96,8 +96,8 @@ jobs:
       id: set-result
       with:
         script: |
-          const { extension-name, release-type, release-environment, release-version } = process.env;
-          return release-environment == 'Preview' ? `${extension-name}-${release-version}-beta` : `${extension-name}-${release-version}`;
+          const { extensionName, releaseType, releaseEnvironment, releaseVersion } = process.env;
+          return release-environment == 'Preview' ? `${extensionName}-${releaseVersion}-beta` : `${extensionName}-${releaseVersion}`;
         result-encoding: string
 
     - name: Get result
