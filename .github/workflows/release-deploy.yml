@@ -26,20 +26,15 @@ jobs:
     - name: Set input as env variables
       run: |
         echo "extension_name=${{ github.event.inputs.extension-name }}" >> $GITHUB_ENV
-        echo "release_type=${{ github.event.inputs.release-type }}" >> $GITHUB_ENV
         echo "release_environment=${{ github.event.inputs.release-environment }}" >> $GITHUB_ENV
 
     - name: Extract branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
-
-    - name: Send greeting
-      run: |
-        echo "${{ steps.extract_branch.outputs.branch }} | ${{ github.event.inputs.extension-name }} | ${{ github.event.inputs.release-type }} | ${{ github.event.inputs.release-environment }}"
         
     - uses: actions/checkout@v1
-      
+
     - name: get version
       id: version
       uses: notiz-dev/github-action-json-property@release
@@ -49,58 +44,42 @@ jobs:
         
     - name: Set version to env
       run: echo "release_version=${{ steps.version.outputs.prop }}" >> $GITHUB_ENV
-              
-    - name: Beta Release Version Tag Name
-      if: ${{ github.event.inputs.release-environment == 'Preview' }}
-      run: echo "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta"
-        
-#     - name: Perform beta release
-#       id: beta-release
-#       if: ${{ github.event.inputs.release-environment == 'Preview' }}
-#       uses: actions/github-script@v6
-#       with:
-#         script: |
-#           github.rest.repos.createRelease({
-#             owner: context.repo.owner,
-#             repo: context.repo.repo,
-#             tag_name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta",
-#             name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}-beta",
-#             prerelease: true,
-#             generate_release_notes: true
-#           });
-
-#     - name: Stable Release Version Tag Name
-#       if: ${{ github.event.inputs.release-environment == 'Preview' }}
-#       run: echo "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}"
-        
-#     - name: Perform Stable release
-#       id: stable-release
-#       if: ${{ github.event.inputs.release-environment == 'Stable' }}
-#       uses: actions/github-script@v6
-#       with:
-#         script: |
-#           github.rest.repos.createRelease({
-#             owner: context.repo.owner,
-#             repo: context.repo.repo,
-#             tag_name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}",
-#             name: "${{ github.event.inputs.extension-name }}-${{ steps.version.outputs.prop }}",
-#             prerelease: false,
-#             generate_release_notes: true
-#           });
-          
-    - name: Execute JS code
+                      
+    - name: Compute Release Name
       uses: actions/github-script@v6
-      id: set-result
+      id: release-name
       with:
         script: |
-          const { extension_name, release_type, release_environment, release_version } = process.env;
-          console.log("extensionName", extension_name);
-          console.log("releaseType", release_type);
-          console.log("releaseEnvironment", release_environment);
-          console.log("releaseVersion", release_version);
+          const { extension_name, release_environment, release_version } = process.env;
 
           return release_environment == 'Preview' ? `${extension_name}-${release_version}-beta` : `${extension_name}-${release_version}`;
         result-encoding: string
+        
+    - name: Is Preview Release
+      uses: actions/github-script@v6
+      id: is-preview-release
+      with:
+        script: |
+          const { release_environment } = process.env;
+          
+          return release_environment == 'Preview';
+          result-encoding: boolean
+
 
     - name: Get result
       run: echo "${{steps.set-result.outputs.result}}"
+      
+    - name: Perform Release
+      id: release
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.repos.createRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag_name: steps.release-name.outputs.result,
+            name: steps.release-name.outputs.result,
+            prerelease: steps.is-preview-release.outputs.result,
+            generate_release_notes: true
+          });
+
