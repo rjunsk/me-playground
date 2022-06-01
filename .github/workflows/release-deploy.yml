@@ -23,6 +23,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set input as env variables
+      env:
+        extension-name: ${{ github.event.inputs.extension-name }}
+        release-type: ${{ github.event.inputs.release-type }}
+        release-environment: ${{ github.event.inputs.release-environment }}
+
     - name: Extract branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
@@ -40,6 +46,10 @@ jobs:
       with: 
         path: '${{ github.event.inputs.extension-name }}/package.json'
         prop_path: 'version'
+        
+    - name: Set version to enc
+      env:
+        release-version: steps.version.outputs.prop
               
     - name: Beta Release Version Tag Name
       if: ${{ github.event.inputs.release-environment == 'Preview' }}
@@ -84,7 +94,8 @@ jobs:
       id: set-result
       with:
         script: |
-          return `${steps.version.outputs.prop}`;
+          const { extension-name, release-type, release-environment, release-version } = process.env;
+          return release-environment == 'Preview' ? `${extension-name}-${release-version}-beta` : `${extension-name}-${release-version}`;
         result-encoding: string
 
     - name: Get result
