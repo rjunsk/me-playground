@@ -1,5 +1,11 @@
 # [2.1.0](https://github.com/rjunsk/me-playground/compare/video-composer-2.0.9...video-composer-2.1.0) (2022-05-16)
 
+## 2.0.15
+
+### Patch Changes
+
+- c153c88: Testing Automated Release 2
+
 ## 2.0.13
 
 ### Patch Changes
