@@ -3,7 +3,7 @@ export default function App() {
     <>
       <h1>Video Composer</h1>
       <ul>
-        <li>Changeset release 1</li>
+        <li>Changeset release 2</li>
       </ul>
     </>
   );
