@@ -24,11 +24,10 @@ jobs:
 
     steps:
     - name: Set input as env variables
-      run: echo "Setting workflow input as env variables"
-      env:
-        extensionName: ${{ github.event.inputs.extension-name }}
-        releaseType: ${{ github.event.inputs.release-type }}
-        releaseEnvironment: ${{ github.event.inputs.release-environment }}
+      run: |
+        echo "extension_name=${{ github.event.inputs.extension-name }}" >> $GITHUB_ENV
+        echo "release_type=${{ github.event.inputs.release-type }}" >> $GITHUB_ENV
+        echo "release_environment=${{ github.event.inputs.release-environment }}" >> $GITHUB_ENV
 
     - name: Extract branch name
       shell: bash
@@ -49,9 +48,7 @@ jobs:
         prop_path: 'version'
         
     - name: Set version to env
-      run: echo "Setting package version as env variables"
-      env:
-        releaseVersion: steps.version.outputs.prop
+      run: echo "release_version=${{ steps.version.outputs.prop }}" >> $GITHUB_ENV
               
     - name: Beta Release Version Tag Name
       if: ${{ github.event.inputs.release-environment == 'Preview' }}
@@ -96,13 +93,13 @@ jobs:
       id: set-result
       with:
         script: |
-          const { extensionName, releaseType, releaseEnvironment, releaseVersion } = process.env;
-          console.log("extensionName", extensionName);
-          console.log("releaseType", releaseType);
-          console.log("releaseEnvironment", releaseEnvironment);
-          console.log("releaseVersion", releaseVersion);
+          const { extension_name, release_type, release_environment, release_version } = process.env;
+          console.log("extensionName", extension_name);
+          console.log("releaseType", release_type);
+          console.log("releaseEnvironment", release_environment);
+          console.log("releaseVersion", release_version);
 
-          return releaseEnvironment == 'Preview' ? `${extensionName}-${releaseVersion}-beta` : `${extensionName}-${releaseVersion}`;
+          return release_environment == 'Preview' ? `${extension_name}-${release_version}-beta` : `${extension_name}-${release_version}`;
         result-encoding: string
 
     - name: Get result
