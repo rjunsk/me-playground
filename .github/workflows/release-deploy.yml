@@ -24,6 +24,7 @@ jobs:
 
     steps:
     - name: Set input as env variables
+      run: echo "Setting workflow input as env variables"
       env:
         extension-name: ${{ github.event.inputs.extension-name }}
         release-type: ${{ github.event.inputs.release-type }}
@@ -47,7 +48,8 @@ jobs:
         path: '${{ github.event.inputs.extension-name }}/package.json'
         prop_path: 'version'
         
-    - name: Set version to enc
+    - name: Set version to env
+      run: echo "Setting package version as env variables"
       env:
         release-version: steps.version.outputs.prop
               
