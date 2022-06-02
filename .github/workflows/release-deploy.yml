@@ -76,9 +76,9 @@ jobs:
           github.rest.repos.createRelease({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            tag_name: steps.release-name.outputs.result,
-            name: steps.release-name.outputs.result,
-            prerelease: steps.is-preview-release.outputs.result,
+            tag_name: '${{ steps.release-name.outputs.result }}',
+            name: '${{ steps.release-name.outputs.result }}',
+            prerelease: '${{ steps.is-preview-release.outputs.result }}',
             generate_release_notes: true
           });
 
