@@ -351,12 +351,10 @@ workflows:
     when:
       equal: ['deploy-audio-mixer-beta', << pipeline.parameters.GHA_Meta >>]
     jobs:
-      - test-audio-mixer:
-          filters: *audio-mixer-deploy-beta-filters
+      - test-audio-mixer
       - deploy-audio-mixer-beta:
           requires:
             - test-audio-mixer
-          filters: *audio-mixer-deploy-beta-filters
 
   deploy-video-composer-beta:
     jobs:
