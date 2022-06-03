@@ -23,6 +23,18 @@ parameters:
     description: Video Composer E2E Test Trigger
     type: boolean
     default: false
+  GHA_Event:
+    type: string
+    default: ''
+  GHA_Actor:
+    type: string
+    default: ''
+  GHA_Action:
+    type: string
+    default: ''
+  GHA_Meta:
+    type: string
+    default: ''
 
 aliases:
   - &deploy-test-filters
@@ -66,7 +78,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "9e:73:29:c1:14:04:e9:d3:4a:d5:f2:bd:d8:bd:87:8e"
+            - '9e:73:29:c1:14:04:e9:d3:4a:d5:f2:bd:d8:bd:87:8e'
       - checkout
       - run:
           name: Set Environment Variables
@@ -336,6 +348,8 @@ workflows:
           filters: *deploy-test-filters
 
   deploy-audio-mixer-beta:
+    when:
+      equal: ['deploy-audio-mixer-beta', << pipeline.parameters.GHA_Meta >>]
     jobs:
       - test-audio-mixer:
           filters: *audio-mixer-deploy-beta-filters

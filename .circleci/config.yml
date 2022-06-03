@@ -6,8 +6,8 @@ parameters:
   test-environment:
     description: Test Environment
     type: enum
-    enum: [ "prod", "stage" ]
-    default: "prod"
+    enum: ['prod', 'stage']
+    default: 'prod'
   trigger-audio-mixer-e2e-tests:
     description: Audio Mixer E2E Test Trigger
     type: boolean
