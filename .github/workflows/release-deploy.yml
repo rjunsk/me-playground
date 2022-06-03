@@ -15,7 +15,7 @@ on:
         required: true
         description: Release Environment
         options: 
-        - Preview
+        - Beta
         - Stable
 
 jobs:
@@ -52,7 +52,7 @@ jobs:
         script: |
           const { extension_name, release_environment, release_version } = process.env;
 
-          return release_environment == 'Preview' ? `${extension_name}-${release_version}-beta` : `${extension_name}-${release_version}`;
+          return release_environment == 'Beta' ? `${extension_name}-${release_version}-beta` : `${extension_name}-${release_version}`;
         result-encoding: string
               
     - name: Perform Release
@@ -61,7 +61,7 @@ jobs:
       with:
         script: |
           const { release_environment } = process.env;
-          const isPreRelease = release_environment == 'Preview';
+          const isPreRelease = release_environment == 'Beta';
           
           github.rest.repos.createRelease({
             owner: context.repo.owner,
@@ -71,4 +71,35 @@ jobs:
             prerelease: isPreRelease,
             generate_release_notes: true
           });
+
+  trigger-circleci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate circle ci workflow name
+        id: circle-ci-workflow-name
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { release_environment, extension_name } = process.env;
+            const isPreRelease = release_environment == 'Beta';
+            console.log('circle-ci-workflow-name', release_environment, extension_name);
+            
+            if (isPreRelease) {
+              return 'deploy-' + extension_name + '-beta';
+            } else {
+              return 'deploy-' + extension_name;
+            }
+          result-encoding: string
+
+      - name: Echo Circle CI Workflow Name
+        run: echo "${{ steps.circle-ci-workflow-name.outputs.result }}"
+
+      - name: Trigger Circle CI
+        id: trigger-circle-ci
+        uses: CircleCI-Public/trigger-circleci-pipeline-action@v1.0.4
+        with:
+          GHA_Meta: ${{ steps.circle-ci-workflow-name.outputs.result }}
+        env:
+          CCI_TOKEN: ${{ secrets.CCI_TOKEN }}
+
 
