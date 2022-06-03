@@ -6,8 +6,8 @@ set_tag_version $EXTENSION
 
 # Construct the Version with the RC
 BASE_VERSION=$(node -pe "require('$EXTENSION/package.json').version")
-VERSION_RC=$(node -pe "require('$EXTENSION/package.json').versionRc")
-VERSION=$BASE_VERSION-rc.$VERSION_RC
+# VERSION_RC=$(node -pe "require('$EXTENSION/package.json').versionRc")
+VERSION=$BASE_VERSION
 
 # Validate the version matches in the project matches the version created by a user
 if [ "$TAG_VERSION" == "$VERSION" ]; then
