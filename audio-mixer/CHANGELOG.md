@@ -1,5 +1,11 @@
 # [2.3.0](https://github.com/rjunsk/me-playground/compare/audio-mixer-2.2.13...audio-mixer-2.3.0) (2022-05-16)
 
+## 2.3.7
+
+### Patch Changes
+
+- 3c477e0: Test Circle CI trigger
+
 ## 2.3.6
 
 ### Patch Changes
