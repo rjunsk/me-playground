@@ -73,8 +73,14 @@ jobs:
           });
 
   trigger-circleci:
+    needs: release
     runs-on: ubuntu-latest
     steps:
+      - name: Set input as env variables
+        run: |
+          echo "extension_name=${{ github.event.inputs.extension-name }}" >> $GITHUB_ENV
+          echo "release_environment=${{ github.event.inputs.release-environment }}" >> $GITHUB_ENV
+
       - name: Calculate circle ci workflow name
         id: circle-ci-workflow-name
         uses: actions/github-script@v6
