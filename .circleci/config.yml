@@ -16,18 +16,6 @@ parameters:
     description: Video Composer E2E Test Trigger
     type: boolean
     default: false
-  GHA_Event:
-    type: string
-    default: ''
-  GHA_Actor:
-    type: string
-    default: ''
-  GHA_Action:
-    type: string
-    default: ''
-  GHA_Meta:
-    type: string
-    default: ''
 
 orbs:
   path-filtering: circleci/path-filtering@0.0.3
